@@ -2,7 +2,6 @@ import React from 'react'
 import 'aframe'
 import { Scene, Entity } from 'aframe-react'
 import 'aframe'
-import 'aframe-look-at-component'
 
 export default class Levels extends React.Component {
 	render() {
