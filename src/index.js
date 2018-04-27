@@ -7,15 +7,15 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { ConnectedRouter } from 'react-router-redux'
 import registerServiceWorker from './registerServiceWorker'
 import { ThemeProvider } from 'styled-components'
-import Level from './Level'
 import Levels from './Levels'
+import Game from './Game'
 
 ReactDOM.render(
 	<Provider store={store}>
 		<ConnectedRouter history={history}>
 			<ThemeProvider theme={Theme}>
 				<Switch>
-					<Route path="/level/:level" component={Level} />
+					<Route path="/:level" component={Game} />
 					<Route path="/" exact component={Levels} />
 					<Redirect to="/" />
 				</Switch>

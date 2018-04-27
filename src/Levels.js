@@ -15,13 +15,13 @@ export default withRouter(
 			<a-sky src="via_lactea.jpg">
 				<Entity
 					geometry="primitive: sphere;
-  radius: 5000;
-  segmentsWidth: 64;
-  segmentsHeight: 64"
+						radius: 5000;
+						segmentsWidth: 64;
+						segmentsHeight: 64"
 					material="shader: flat; 
-  src: url(via_lactea.jpg);
-  color: #FFF;
-  fog: false"
+						src: url(via_lactea.jpg);
+						color: #FFF;
+						fog: false"
 					scale="-1 1 1"
 				/>
 			</a-sky>
@@ -38,7 +38,7 @@ export default withRouter(
 				rotation="0 0 0"
 				id="sun"
 				events={{
-					click: () => go('/level/sun')
+					click: () => go('/sun')
 				}}
 			>
 				<a-image
@@ -82,7 +82,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 197.13176999996358 0"
 				events={{
-					click: () => go('/level/mercury')
+					click: () => go('/mercury')
 				}}
 			>
 				<a-animation
@@ -132,7 +132,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 175.22823999996763 0"
 				events={{
-					click: () => go('/level/venus')
+					click: () => go('/venus')
 				}}
 			>
 				<a-animation
@@ -182,7 +182,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 157.70541599997085 0"
 				events={{
-					click: () => go('/level/earth')
+					click: () => go('/earth')
 				}}
 			>
 				<a-animation
@@ -260,7 +260,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 143.3685599999735 0"
 				events={{
-					click: () => go('/level/mars')
+					click: () => go('/mars')
 				}}
 			>
 				<a-animation
@@ -326,7 +326,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 131.42117999997572 0"
 				events={{
-					click: () => go('/level/jupiter')
+					click: () => go('/jupiter')
 				}}
 			>
 				<a-animation
@@ -376,7 +376,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 121.31185846151604 0"
 				events={{
-					click: () => go('/level/saturn')
+					click: () => go('/saturn')
 				}}
 			>
 				<a-animation
@@ -440,7 +440,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 112.6467257142649 0"
 				events={{
-					click: () => go('/level/uranus')
+					click: () => go('/uranus')
 				}}
 			>
 				<a-animation
@@ -497,7 +497,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 105.13694399998059 0"
 				events={{
-					click: () => go('/level/neptune')
+					click: () => go('/neptune')
 				}}
 			>
 				<a-animation
@@ -562,56 +562,6 @@ export default withRouter(
 					rotation="90 0 0"
 					scale="1 1 0.1"
 				/>
-			</Entity>
-
-			<Entity
-				position="0 0 0"
-				rotation="0 98.56588499998179 0"
-				events={{
-					click: () => go('/level/pluto')
-				}}
-			>
-				<a-animation
-					attribute="rotation"
-					to="0 360 0"
-					dur="80000"
-					fill="forwards"
-					easing="linear"
-					repeat="indefinite"
-				/>
-				<a-image position="0 5 46" scale="1.5 0.3 1.5" src="PLUTO.png" />
-				<a-sphere
-					position="0 0 46"
-					scale="0.4 0.4 0.4"
-					src="pluton.jpg"
-					rotation="0 165.62860799994087 0"
-				>
-					<a-mouseenter scale="3 3 3" />
-					<a-mouseleave scale="0.4 0.4 0.4" />
-					<a-animation
-						attribute="rotation"
-						from="0 0 0"
-						to="0 360 0"
-						dur="15000"
-						repeat="indefinite"
-						easing="linear"
-					/>
-
-					<Entity
-						geometry="primitive: sphere;
-  radius: 0.85;
-  segmentsWidth: 36;
-  segmentsHeight: 18;
-  translate: 0 0 0"
-						material="color: gray;
-  opacity: 1.0;
-  shader: standard;
-  transparent: true;
-  metalness: 0.0;
-  roughness: 0.5;
-  src: url(pluton.jpg)"
-					/>
-				</a-sphere>
 			</Entity>
 
 			<Entity
