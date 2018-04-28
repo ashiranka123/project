@@ -1,3 +1,5 @@
+import 'aframe-look-at-component'
+import 'aframe-event-set-component'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -12,6 +14,11 @@ export default withRouter(
 		})
 	)(({ go }) => (
 		<Scene>
+			<a-entity
+				text="value:Space Invaders; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json;"
+				position="23 15 0"
+				scale="70 70 70"
+			/>
 			<a-sky src="via_lactea.jpg">
 				<Entity
 					geometry="primitive: sphere;
@@ -25,22 +32,14 @@ export default withRouter(
 					scale="-1 1 1"
 				/>
 			</a-sky>
-
 			<Entity light="type: ambient; color: #FFFFFF" />
 			<Entity
 				light="type: point; intensity: 1;color: #BABABA"
 				position="0 0 0"
 			/>
-			<Entity sound="src: nocturno.mp3; autoplay: true; volume: 1" />
+			<Entity sound="src: intro.ogg; autoplay: true; volume: 10;loop: true;" />
 
-			<Entity
-				position="0 0 0"
-				rotation="0 0 0"
-				id="sun"
-				events={{
-					click: () => go('/sun')
-				}}
-			>
+			<Entity position="0 0 0" rotation="0 0 0" id="sun">
 				<a-image
 					position="0 5 0"
 					src="SUN.png"
@@ -82,7 +81,7 @@ export default withRouter(
 				position="0 0 0"
 				rotation="0 197.13176999996358 0"
 				events={{
-					click: () => go('/mercury')
+					click: () => go('/mercury/quiz')
 				}}
 			>
 				<a-animation
@@ -99,9 +98,10 @@ export default withRouter(
 					scale="0.4 0.4 0.4"
 					rotation="0 165.62860799994087 0"
 					src="mercurio.jpg"
+					event-set__click="visible:false;"
+					event-set__mouseenter="scale: 3 3 3;"
+					event-set__mouseleave="scale: 0.4 0.4 0.4;"
 				>
-					<a-mouseenter scale="3 3 3" easing="linear" />
-					<a-mouseleave scale="0.4 0.4 0.4" />
 					<a-animation
 						attribute="rotation"
 						from="0 0 0"
@@ -149,9 +149,9 @@ export default withRouter(
 					scale="0.4 0.4 0.4"
 					src="venus.jpg"
 					rotation="0 165.62860799994087 0"
+					event-set__mouseenter="scale: 3 3 3;"
+					event-set__mouseleave="scale: 0.4 0.4 0.4;"
 				>
-					<a-mouseenter scale="3 3 3" />
-					<a-mouseleave scale="0.4 0.4 0.4" />
 					<a-animation
 						attribute="rotation"
 						from="0 0 0"
@@ -621,29 +621,22 @@ export default withRouter(
 				rotation="90 0 0"
 				scale="2 2 0.1"
 			/>
-			<Entity
-				geometry="primitive: torus; radius: 23.05; radiusTubular: 0.01;segmentsTubular: 50"
-				material="color: #FFFFFF;opacity: 0.3"
-				position="0 0 0"
-				rotation="90 0 0"
-				scale="2 2 0.1"
-			/>
 
 			<Entity
 				id="camera"
 				camera
 				position="0 15 50"
 				look-controls="enabled: true"
-				rotation="0 -100 0"
+				rotation="-30 0 0"
 				cursor-visible="enabled: true"
 				wasd-controls="enabled: true"
 			>
 				<Entity
 					id="cursor"
-					cursor="fuse: false;  maxDistance: 100; timeout: 200"
+					cursor="fuse: false"
 					geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"
 					material="color: aquamarine"
-					position="0 0 -0.69"
+					position="0 0 -0.5"
 					raycaster=""
 				/>
 			</Entity>

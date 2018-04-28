@@ -1,9 +1,11 @@
 import { Scene, Entity } from 'aframe-react'
 import 'aframe-look-at-component'
+import 'aframe-event-set-component'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
+import 'aframe-effects'
 
 export default withRouter(
 	connect(
@@ -24,7 +26,7 @@ export default withRouter(
 				score: 0,
 				difficulty: {
 					mercury: 1,
-					venues: 2,
+					venus: 2,
 					earth: 3,
 					mars: 4,
 					jupiter: 5,
@@ -33,10 +35,10 @@ export default withRouter(
 					neptune: 8
 				}[this.props.match.params.level],
 				timer:
-					1100 -
+					100 -
 					{
 						mercury: 1,
-						venues: 2,
+						venus: 2,
 						earth: 3,
 						mars: 4,
 						jupiter: 5,
@@ -44,14 +46,30 @@ export default withRouter(
 						uranus: 7,
 						neptune: 8
 					}[this.props.match.params.level] *
-						100
+						10,
+				explosion: false,
+				lost: false,
+				win: false
 			}
 
 			componentDidMount() {
-				this.readingTimer = setTimeout(
-					() => this.setState({ reading: false }),
-					100000
-				)
+				this.readingTimer = setTimeout(() => {
+					this.setState({ reading: false })
+					this.countDownTimer()
+				}, 100000)
+			}
+
+			countDownTimer = () => {
+				setTimeout(() => {
+					if (this.state.timer > 0) {
+						if (!this.state.win) {
+							this.setState({ timer: this.state.timer - 1 })
+							this.countDownTimer()
+						}
+					} else {
+						this.setState({ lost: true })
+					}
+				}, 1000)
 			}
 
 			componentWillMount() {
@@ -60,8 +78,57 @@ export default withRouter(
 				}
 			}
 
+			goHome = () => this.props.go('/')
+			goQuiz = () => this.props.go(`/${this.props.match.params.level}/quiz`)
+
+			updateScore = () => {
+				let newScore = this.state.lost
+					? this.state.score
+					: this.state.score + this.state.difficulty * 10
+
+				this.setState({
+					score: newScore,
+					explosion: true,
+					win: newScore >= this.state.difficulty * 10 * 10 ? true : false
+				})
+				setTimeout(() => this.setState({ explosion: false }), 1000)
+			}
+
 			render = () => (
-				<Scene>
+				<Scene
+					effects="glitch"
+					glitch={this.state.explosion ? 'true' : 'false'}
+				>
+					{this.state.win && (
+						<Entity
+							events={{ click: this.goQuiz }}
+							primitive="a-image"
+							src="url(quiz.gif)"
+							position="0 1.7 -2"
+						/>
+					)}
+					<a-sound src="src: url(music.ogg)" autoplay="true" volume="0.5" />
+					{this.state.explosion && (
+						<a-sound
+							src="src: url(explosion3.ogg)"
+							autoplay="true"
+							volume="2"
+						/>
+					)}
+					{this.state.lost && (
+						<a-entity
+							position="2.6 2 -2"
+							scale="7 7 7"
+							text={`value:You LOSE!; color:red; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json;`}
+						/>
+					)}
+					{this.state.win && (
+						<a-entity
+							position="2.7 2 -2"
+							scale="7 7 7"
+							text={`value:You WIN!; color:green; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json;`}
+						/>
+					)}
 					<Entity
 						events={{
 							click: this.handleClick,
@@ -73,6 +140,13 @@ export default withRouter(
 						position="0 0 -5"
 					/>
 
+					<Entity
+						events={{ click: this.goHome }}
+						primitive="a-image"
+						src="url(solar.jpg)"
+						position="0 -0.5 -2"
+					/>
+
 					<a-curvedimage
 						src={`${this.props.match.params.level}_info.png`}
 						material=""
@@ -82,150 +156,213 @@ export default withRouter(
 						visible={this.state.reading}
 					/>
 
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="-1.9999756110000493 2 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="5000"
-							fill="forwards"
-							to="-2 2 -5"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="3.501 3.891 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="5500"
-							fill="forwards"
-							to="-2 2 -5"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="-1.999975408602728 2 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="5000"
-							fill="forwards"
-							to="-2 2 -5"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="-3.522 4.67 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="500"
-							fill="forwards"
-							to="-2 2 -5"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="-0.95695289419337 2 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="10000"
-							fill="forwards"
-							to="-2 2 -5"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="-1.547 3.582 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="8000"
-							fill="forwards"
-							to="-3 2 -5"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="-3.344 2 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="7000"
-							fill="forwards"
-							to="-5 3 -4"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="2.162 2 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="9000"
-							fill="forwards"
-							to="-2 4 -3"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
-					<a-entity
-						gltf-model="/enemy.gltf"
-						scale="0.02 0.02 0.02"
-						position="1.2585093331605095 4 -5"
-						look-at="[camera]"
-						visible={`${!this.state.reading}`}
-					>
-						<a-animation
-							attribute="position"
-							dur="9000"
-							fill="forwards"
-							to="2 5 -4"
-							direction="alternate"
-							repeat="indefinite"
-						/>
-					</a-entity>
+					{!this.state.reading && (
+						<React.Fragment>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="0.5 4.2 -6"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="5000"
+										fill="forwards"
+										to="0.65 4.3 -6"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="5 3.8 -5"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="5500"
+										fill="forwards"
+										to="5.2 3.5 -5"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="-1 2.6 -6.8"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="5000"
+										fill="forwards"
+										to="-0.8 2.5 -6.8"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="-4 5 -5"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="500"
+										fill="forwards"
+										to="-4.2 5.1 -5"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="-3.1 2.6 -5"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="10000"
+										fill="forwards"
+										to="-3.2 2.7 -5"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="-5 3 -4"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="8000"
+										fill="forwards"
+										to="-5.1 3.2 -4"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="2.2 2 -5"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="7000"
+										fill="forwards"
+										to="2.4 2.2 -5"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="3.4 0.5 -5"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="9000"
+										fill="forwards"
+										to="3.6 0.8 -5"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="1.25 4 -4"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="9000"
+										fill="forwards"
+										to="1.5 4.5 -4"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+
+							<Entity
+								event-set__click="visible:false;"
+								events={{ click: this.updateScore }}
+							>
+								<a-entity
+									gltf-model="/enemy.gltf"
+									scale="0.02 0.02 0.02"
+									position="-4 1.5 -4"
+									look-at="[camera]"
+								>
+									<a-animation
+										attribute="position"
+										dur="9000"
+										fill="forwards"
+										to="-4.2 1.6 -4"
+										direction="alternate"
+										repeat="indefinite"
+									/>
+								</a-entity>
+							</Entity>
+						</React.Fragment>
+					)}
 
 					<a-entity light="color: #ffffff; groundColor: #79a8bb; intensity: 0.3; type: hemisphere" />
 					<a-entity position="0 50 0" light="intensity: 0.9; type: point" />
@@ -239,13 +376,19 @@ export default withRouter(
 					/>
 
 					<a-entity
-						id="player"
 						camera="userHeight: 1.6"
-						wasd-controls
+						wasd-controls="enabled:false;"
 						look-controls
-						restrict-position
-						shoot="direction: 0 0 -1; spaceKeyEnabled: true"
-					/>
+					>
+						<Entity
+							id="cursor"
+							cursor="fuse: false"
+							geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"
+							material="color: white"
+							position="0 0 -0.5"
+							raycaster=""
+						/>
+					</a-entity>
 
 					<a-entity
 						id="ring0"
@@ -263,6 +406,24 @@ export default withRouter(
 							easing="linear"
 						/>
 					</a-entity>
+
+					<a-entity
+						position="3.807 -0.5 -2.671"
+						scale="5 5 5"
+						rotation="0 -28 0"
+						text={`value:${
+							this.state.score
+						}; color:green; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json;`}
+					/>
+
+					<a-entity
+						position="0.478 -0.5 -4.775"
+						scale="5 5 5"
+						text={`value:${
+							this.state.timer
+						};color:red;shader:msdf;font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json`}
+						rotation="-5.557690612768986 25.66850922186088 0"
+					/>
 
 					<a-entity
 						id="ring1"

@@ -1340,11 +1340,23 @@ address@1.0.3, address@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/address/-/address-1.0.3.tgz#b5f50631f8d6cec8bd20c963963afb55e06cbce9"
 
+aframe-effects@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/aframe-effects/-/aframe-effects-0.8.0.tgz#be9c546270314f5b4264303302d1759c103fd45e"
+
+aframe-event-set-component@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/aframe-event-set-component/-/aframe-event-set-component-4.1.1.tgz#a718120126e4fa2d0e900a9e64c4f1dad1cc4d41"
+
 aframe-extras@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/aframe-extras/-/aframe-extras-4.0.2.tgz#92b85fa88fa0db6d2b299e7f6707d8ffb3847e36"
   dependencies:
     three-pathfinding "^0.5.5"
+
+aframe-layout-component@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/aframe-layout-component/-/aframe-layout-component-4.3.1.tgz#2ffe7c3338837dd3fc824f3bb739e10053b121a2"
 
 aframe-look-at-component@^0.6.0:
   version "0.6.0"
